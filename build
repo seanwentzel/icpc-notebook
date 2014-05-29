@@ -1,0 +1,4 @@
+#!/bin/bash
+in=${1//.in}
+base=${in//[0-9]}
+g++ -std=c++0x -D_GLIBCXX_DEBUG -g -Wall -o $base $base.cpp && ./$base <$in.in >$in.out && diff -s $in.out $in.eout
