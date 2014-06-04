@@ -1,28 +1,20 @@
 #include <vector>
 #include <utility>
 #include <cassert>
+#include <algorithm>
 
 using namespace std;
 
 template <class Key, class Value>
 Value binsearch(vector<pair<Key, Value> > list, Key key) {
-  int min = 0;
-  int max = list.size(); 
-
-  // put an upper bound on the number of comparisons so no infinite loop. Yaaay!
-  for (int i=0; i<list.size(); i++) {
-    int mid = min + (max - min)/2;
-    Key midKey = list[mid].first;
-    if (midKey == key) {
-      return list[mid].second;
-    }
-    if (key < midKey) {
-      max = mid;
-    } else if (key > midKey) {
-      min = mid;
-    }
-  }
-  return (Value)NULL;
+  auto cmp = [] (const pair<Key, Value> &a, const Key &b) {
+    return a.first < b;
+  };
+  auto p = lower_bound(list.begin(), list.end(), key, cmp);
+  if (p != list.end() && !(key < p->first))
+    return p->second;
+  else
+    return Value();
 }
 
 #define TEST true
